@@ -1,0 +1,19 @@
+﻿<Window x:Class="Gambling_But_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gambling_But_WPF"
+        mc:Ignorable="d"
+        Title="Gambling" Height="450" Width="600">
+    <Grid>
+        <!-- Button for Gambling -->
+        <Button x:Name="GambleButton" Content="Gamble" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Click="GambleButton_Click" />
+
+        <!-- Label/Button to display current money -->
+        <Button x:Name="MoneyButton" Content="$100" Width="100" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" IsEnabled="False"/>
+
+        <!-- A Canvas where symbols will be dynamically placed -->
+        <Canvas x:Name="SymbolsCanvas" Width="480" Height="400" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+    </Grid>
+</Window>
