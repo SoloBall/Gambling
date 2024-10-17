@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Media;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,11 +23,32 @@ namespace Gambling_But_WPF
         Random rand = new Random();
         double money = 100;
 
+
+
+
+
+
+
+
+
+        // you must debug the countsymbols method and replacesymbols methods
+
+
+
+
+
+
+
+
+
+
+
+
+
         public MainWindow()
         {
             InitializeComponent(); // Initialize the window
             UpdateMoneyDisplay();  // Show the initial amount of money
-            GambleButton_Click(null!, null!);  // Simulate the first click of gambling
         }
 
         private string GetRandomSymbol()
@@ -36,10 +58,41 @@ namespace Gambling_But_WPF
             {
                 files.Add(file);
             }
-            return files[rand.Next(files.Count)];
-        }
+            
+            int num = rand.Next(0, files.Count * 100);
+            switch (num) {
+                case > 870:
+                    return files[8];
 
-        private void GambleButton_Click(object sender, RoutedEventArgs e)
+                case > 830:
+                    return files[7];
+
+                case > 770:
+                    return files[6];
+
+                case > 710:
+                    return files[5];
+
+                case > 640:
+                    return files[4];
+
+                case > 500:
+                    return files[3];
+
+                case > 300:
+                    return files[2];
+
+                default:
+                    return files[rand.Next(0, 1)];
+            }
+        }
+        public void PlaySound(string path)
+        {
+            MediaPlayer player = new();
+            player.Open(new(path, UriKind.Relative));
+            player.Play();
+        }
+        private async void GambleButton_Click(object sender, RoutedEventArgs e)
         {
             money -= 1; // Deduct money for each gamble
             SymbolsCanvas.Children.Clear();  // Clear previous symbols
@@ -49,6 +102,7 @@ namespace Gambling_But_WPF
                 for (int j = 0; j < 5; j++)  // 5 rows
                 {
                     AddSymbol(new Point(i * 80, j * 80));
+                    await Task.Delay(10);
                 }
             }
 
@@ -57,10 +111,19 @@ namespace Gambling_But_WPF
             {
                 if (symbols[i] > 7)
                 {
-                    money += symbols[i] * ((i + 1) * 0.3);
+                    int test = 0;
+                    foreach (int x in symbols)
+                    {
+                        test += x;
+                    }
+                    GambleButton.IsEnabled = false;
+                    await Task.Delay(1000);
+                    money += (symbols[i] - 7) * ((i + 1) * 0.3);
                     ReplaceAllSymbolInstances(i + 1);
+                    await Task.Delay(1000);
                     symbols = CountSymbols();
                     i = 0;  // Reset the loop
+                    GambleButton.IsEnabled = true;
                 }
             }
 
@@ -72,8 +135,9 @@ namespace Gambling_But_WPF
             MoneyButton.Content = "$" + money.ToString();  // Update money text
         }
 
-        private void ReplaceAllSymbolInstances(int symbol)
+        private async void ReplaceAllSymbolInstances(int symbol)
         {
+            string FishSoundPath = "..\\..\\..\\Resources\\Sounds\\fish.wav";
             List<UIElement> symbolInstances = new List<UIElement>();
 
             foreach (UIElement element in SymbolsCanvas.Children)
@@ -87,15 +151,20 @@ namespace Gambling_But_WPF
             foreach (UIElement instance in symbolInstances)
             {
                 SymbolsCanvas.Children.Remove(instance);
+                PlaySound(FishSoundPath);
             }
 
+            await Task.Delay(300);
             // Make existing symbols fall down to fill gaps
-            foreach (UIElement element in SymbolsCanvas.Children)
+            for (int i = SymbolsCanvas.Children.Count - 1; i > 0; i--)
             {
+                UIElement element = SymbolsCanvas.Children[i];
                 while (GetControlAtLocation(new Point(Canvas.GetLeft(element), Canvas.GetTop(element) + 80)) == null && Canvas.GetTop(element) < 320)
                 {
                     Canvas.SetTop(element, Canvas.GetTop(element) + 80);
                 }
+                await Task.Delay(20);
+                PlaySound(FishSoundPath);
             }
 
             // Add new symbols to fill gaps
@@ -106,6 +175,8 @@ namespace Gambling_But_WPF
                     if (GetControlAtLocation(new Point(i * 80, j * 80)) == null)
                     {
                         AddSymbol(new Point(i * 80, j * 80));
+                        await Task.Delay(50);
+                        PlaySound(FishSoundPath);
                     }
                 }
             }
@@ -141,8 +212,8 @@ namespace Gambling_But_WPF
             label.BorderThickness = new Thickness(2);
             label.Name = labelSymbol[labelSymbol.Length - 6].ToString() + labelSymbol[labelSymbol.Length - 5].ToString();
 
-            Canvas.SetLeft(label, location.X - 30);
-            Canvas.SetBottom(label, location.Y + 100);
+            Canvas.SetLeft(label, location.X);
+            Canvas.SetTop(label, location.Y);
             SymbolsCanvas.Children.Add(label);
         }
 
