@@ -21,7 +21,6 @@ namespace Gambling_But_WPF
     {
         Random rand = new Random();
         double money = 100;
-        DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow()
         {
@@ -49,7 +48,7 @@ namespace Gambling_But_WPF
             {
                 for (int j = 0; j < 5; j++)  // 5 rows
                 {
-                    AddSymbol(new Point(i * 80 + 30, j * 80));
+                    AddSymbol(new Point(i * 80, j * 80));
                 }
             }
 
@@ -104,9 +103,9 @@ namespace Gambling_But_WPF
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    if (GetControlAtLocation(new Point(i * 80 + 30, j * 80)) == null)
+                    if (GetControlAtLocation(new Point(i * 80, j * 80)) == null)
                     {
-                        AddSymbol(new Point(i * 80 + 30, j * 80));
+                        AddSymbol(new Point(i * 80, j * 80));
                     }
                 }
             }
